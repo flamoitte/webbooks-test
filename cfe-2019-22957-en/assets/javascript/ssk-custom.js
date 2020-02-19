@@ -38,7 +38,7 @@ SocialShareKit.init({
    	  }
     },
     title: jQuery(document).find("#web_pubtitle").text() + '',
-    url: jQuery('.ssk-twitter').attr("href"),
+    url: window.location,
 });
 
 jQuery(document).ready(function () {
