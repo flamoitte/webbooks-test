@@ -1,8 +1,7 @@
 SocialShareKit.init({
     facebook: {
-        url: jQuery('.ssk-facebook').attr("href"),
+        url: window.location,
         caption: jQuery(document).find("#web_pubtitle").text(),
-        picture: '',
     },
     twitter: {
         text: '',
