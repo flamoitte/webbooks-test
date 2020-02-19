@@ -1,7 +1,8 @@
 SocialShareKit.init({
     facebook: {
         url: window.location,
-        caption: jQuery(document).find("#web_pubtitle").text(),
+        caption: '',
+        picture: '',
     },
     twitter: {
         text: '',
@@ -36,7 +37,7 @@ SocialShareKit.init({
 		});
    	  }
     },
-    title: jQuery(document).find("#web_pubtitle").text() + '',
+    title: '',
     url: window.location,
 });
 
