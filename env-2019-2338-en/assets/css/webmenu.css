@@ -1655,17 +1655,12 @@ div.web_figure-button {
     border-radius: 3px 3px 0 0;
     cursor: pointer;
 }
-div.web_figure-button.web_figure-button-cyc {
-    margin-top: 20px;
-    margin-right: 0.25em;
-}
 div.web_figure-share {
     display: none;
-    margin-top: 10px;
     margin-bottom: -10px;
     list-style: none;
     float:left;
-    padding: .5em .1em .2em .1em;
+    padding: 0 .1em .2em .1em;
     border-radius: 3px 3px 0 0;
     margin-right: 0.25em;
     cursor: pointer;
