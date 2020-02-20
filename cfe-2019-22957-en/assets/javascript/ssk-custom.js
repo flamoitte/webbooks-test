@@ -6,7 +6,7 @@ SocialShareKit.init({
     },
     twitter: {
         text: '',
-        via: '',
+        via: '@oecd',
     },
     onOpen: function(targetElement, network, networkUrl, popupWindow){
       if (network === 'facebook') {
