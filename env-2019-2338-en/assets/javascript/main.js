@@ -47,11 +47,11 @@ var matches;
 
 const INDEX_FILE = 'data/index1000.json';
 
-if (navigator.serviceWorker) {
+/*if (navigator.serviceWorker) {
   navigator.serviceWorker.register('sw.js').catch(function(error) {
     console.error('Unable to register service worker.', error);
   });
-}
+}*/
 
 // Get index data and load index
 fetch(INDEX_FILE).then(response => {
