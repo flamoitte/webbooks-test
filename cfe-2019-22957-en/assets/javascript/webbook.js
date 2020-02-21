@@ -152,7 +152,7 @@ $(document).ready(function() {
     highlightToc();
 
 
-    var index = elasticlunr(function () {
+/*    var index = elasticlunr(function () {
         this.addField('title');
         this.addField('body');
         this.setRef('id');
@@ -173,7 +173,7 @@ $(document).ready(function() {
     index.addDoc(doc1);
     index.addDoc(doc2);
     
-    index.search("Oracle database");
+    index.search("Oracle database");*/
 
   /*  Indexing the FAQ content */
 /*    var search = elasticlunr(function () {
