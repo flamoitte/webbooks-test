@@ -45,7 +45,7 @@ var currentPage = 0;
 var index;
 var matches;
 
-const INDEX_FILE = 'data/index1000.json';
+const INDEX_FILE = 'data/index.json';
 
 /*if (navigator.serviceWorker) {
   navigator.serviceWorker.register('sw.js').catch(function(error) {
