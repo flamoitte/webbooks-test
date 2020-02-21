@@ -150,9 +150,8 @@ $(document).ready(function() {
 
     displayBlockQuote();
     highlightToc();
-
-
-function FaqSearch(lang) {
+    
+/*function FaqSearch(lang) {*/
   /*  Indexing the FAQ content */
   var search = elasticlunr(function () {
     this.addField('title');
@@ -197,8 +196,7 @@ $( "#search-faq" ).keyup(function() {
     $('.faq-question', $(this).attr("href")).addClass('is-active');
   });
 
-}
-
+/*}*/
 
     function setTocHeight(){
         if ($(window).scrollTop() + $(window).height() > $(".web_end-article").offset().top) {
