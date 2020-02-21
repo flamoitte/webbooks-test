@@ -150,53 +150,75 @@ $(document).ready(function() {
 
     displayBlockQuote();
     highlightToc();
+
+
+    var index = elasticlunr(function () {
+        this.addField('title');
+        this.addField('body');
+        this.setRef('id');
+    });
     
-/*function FaqSearch(lang) {*/
+    var doc1 = {
+        "id": 1,
+        "title": "Oracle released its latest database Oracle 12g",
+        "body": "Yestaday Oracle has released its new database Oracle 12g, this would make more money for this company and lead to a nice profit report of annual year."
+    }
+    
+    var doc2 = {
+        "id": 2,
+        "title": "Oracle released its profit report of 2015",
+        "body": "As expected, Oracle released its profit report of 2015, during the good sales of database and hardware, Oracle's profit of 2015 reached 12.5 Billion."
+    }
+    
+    index.addDoc(doc1);
+    index.addDoc(doc2);
+    
+    index.search("Oracle database");
+
   /*  Indexing the FAQ content */
-  var search = elasticlunr(function () {
-    this.addField('title');
-    this.addField('body');
-    this.setRef('id');
-  });
+/*    var search = elasticlunr(function () {
+        this.addField('title');
+        this.addField('body');
+        this.setRef('id');
+    });
 
-  $(".faq-question").each(function (index, element) {
-    var $q = $(element);
-    var question = $q.find(".faq-headline").text();
-    var answer = $q.find(".faq-answer").text();
-    var $qid = $q.find(".qid").val();
+    $(".faq-question").each(function (index, element) {
+        var $q = $(element);
+        var question = $q.find(".faq-headline").text();
+        var answer = $q.find(".faq-answer").text();
+        var $qid = $q.find(".qid").val();
+        
+        /\* init ElasticLunar *\/
+        var docid = {
+            id: $q.attr('id'),
+            title: question,
+            body: answer
+        };
+        search.addDoc(docid);
+    });
 
-    /* init ElasticLunar */
-    var docid = {
-      id: $q.attr('id'),
-      title: question,
-      body: answer
-    };
-    search.addDoc(docid);
-  });
-
-$( "#search-faq" ).keyup(function() {
-    var searchCtrl = $( "#search-input" ).val();
-    var searchResult = search.search(searchCtrl) || [];
-    
-    $('#search-results').empty(); /* celar old results */
-    for (var i = 0; i < searchResult.length; i++) {
-        var qId = searchResult[i]['ref'];
-        var q = $('#' + qId + ' .question-content').text();
-        $('#search-results').append("" + q + " ");
-        /* open the suggestion list */
-        $('#search-results').addClass('is-active'); 
-    };
-    
-    $('#search-results').slideDown();
-});
+    $( "#search-faq" ).keyup(function() {
+        var searchCtrl = $( "#search-input" ).val();
+        var searchResult = search.search(searchCtrl) || [];
+        
+        $('#search-results').empty(); /\* celar old results *\/
+        for (var i = 0; i < searchResult.length; i++) {
+            var qId = searchResult[i]['ref'];
+            var q = $('#' + qId + ' .question-content').text();
+            $('#search-results').append("" + q + " ");
+            /\* open the suggestion list *\/
+            $('#search-results').addClass('is-active'); 
+        };
+        
+        $('#search-results').slideDown();
+    });
 
   $('#search-results').on('click', '.search-result', function() {
     $('.faq-question').removeClass('is-active');
     $('#search-results').slideUp();
     $('.faq-question', $(this).attr("href")).addClass('is-active');
-  });
+  });*/
 
-/*}*/
 
     function setTocHeight(){
         if ($(window).scrollTop() + $(window).height() > $(".web_end-article").offset().top) {
