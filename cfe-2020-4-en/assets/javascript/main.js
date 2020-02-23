@@ -1,23 +1,3 @@
-/*
-Copyright 2017 Google Inc.
-
-Licensed under the Apache License, Version 2.0 (the 'License');
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an 'AS IS' BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
-
-'use strict';
-
-/* global elasticlunr */
-
 const backToResultsElement = document.getElementById('backToResults');
 backToResultsElement.onclick = backToResults;
 const itemNavigationElement = document.getElementById('itemNavigation');
@@ -32,70 +12,72 @@ const matchesInfoElement = document.getElementById('matchesInfo');
 const queryInput = document.getElementById('query');
 
 const MATCHES_PER_PAGE = 10;
-const SEARCH_OPTIONS = {
-  fields: {
-    title: {boost: 2},
-    description: {boost: 1}
-  },
-  bool: 'OR',
-  expand: true // true: do not require whole-word matches only
-};
 
 var currentPage = 0;
 var index;
 var matches;
 
-const INDEX_FILE = 'data/index1000.json';
+var request = new XMLHttpRequest();
+request.open("GET","data/index.json", false);
+request.send(null);
+var documents = JSON.parse(request.responseText);
 
-if (navigator.serviceWorker) {
-  navigator.serviceWorker.register('sw.js').catch(function(error) {
-    console.error('Unable to register service worker.', error);
-  });
+/*   var request = new XMLHttpRequest();
+   request.open("GET", "data/index.json", false);
+   request.send(null)
+   var my_JSON_object = JSON.parse(request.responseText);
+   alert (my_JSON_object.name);*/
+   
+
+/*var documents =
+[
+{
+  "name": "https://flamoitte.github.io/webbooks-test/index.html",
+  "text": "Circular economy - waste and materials"
 }
+]
+;*/
 
-// Get index data and load index
-fetch(INDEX_FILE).then(response => {
-  return response.json();
-}).then(json => {
-  elasticlunr.clearStopWords();
-  startPerf();
-  index = elasticlunr.Index.load(json);
-  endPerf();
-  logPerf('Index loading');
-  queryInput.disabled = false;
-  queryInput.focus();
+
+var index = lunr(function () {
+    this.ref('name')
+    this.field('text')
+    
+    console.log(documents);
+    documents.forEach(function (doc) {
+        this.add(doc)
+    }, this)
 });
 
-// Search for products whenever query input text changes
+
 queryInput.oninput = doSearch;
 
 function doSearch() {
-  matchesElement.textContent = '';
-  showMatchInfo('');
-  showItemNavigationInfo('');
-  hide(nextPageLink);
-  hide(previousPageLink);
-
-  currentPage = 0;
-
-  const query = queryInput.value;
-  if (query.length < 2) {
-    return;
-  }
-
-  startPerf();
-  matches = window.matches = index.search(query, SEARCH_OPTIONS);
-  console.log('matches', matches);
-  endPerf();
-  logPerf('Search');
-
-  if (matches.length === 0) {
-    showMatchInfo('No matches :^\\');
+    matchesElement.textContent = '';
+    showMatchInfo('');
     showItemNavigationInfo('');
-    return;
-  } else {
-    showMatches();
-  }
+    hide(nextPageLink);
+    hide(previousPageLink);
+    
+    currentPage = 0;
+
+    const query = queryInput.value;
+    if (query.length < 2) {
+        return;
+    }
+    
+    console.log(index.search(query));
+    console.log(documents.name);
+    
+    
+    matches = window.matches = index.search(query);
+    if (matches.length === 0) {
+        showMatchInfo('No matches :^\\');
+        showItemNavigationInfo('');
+        return;
+    } else {
+        showMatches();
+    }
 }
 
 function showMatches() {
@@ -111,6 +93,7 @@ function showMatches() {
   showItemNavigationInfo('Click on an item to view product details');
 
   for (let i = startIndex; i !== endIndex; ++i) {
+    console.log(matches[i].ref);
     addMatch(matches[i]);
   }
 
@@ -129,21 +112,30 @@ function showMatches() {
 function addMatch(match) {
   const matchElement = document.createElement('div');
   matchElement.classList.add('match');
-  matchElement.appendChild(document.createTextNode(match.doc.title));
-  matchElement.onclick = showProductInfo.bind(match.doc);
+  
+  count = 0;
+    documents.forEach(function (doc) {
+        console.log(this.name);
+        if(this.name == match.ref){
+            return;
+        }
+    }, this)
+    
+  matchElement.appendChild(document.createTextNode(documents[count].text));
+  matchElement.onclick = showProductInfo.bind(match.ref);
   matchesElement.appendChild(matchElement);
 }
 
 function showProductInfo() {
   console.log('this', this);
-  hide(matchesElement);
+/*  hide(matchesElement);
   hide(pageNavigationElement);
   show(backToResultsElement);
   // dummy content: could include images if online/cached — whatever
   productInfoElement.innerHTML =
-    '<div class="productTitle">' + this.title + '</div>' +
-    '<div class="productDescription">' + this.description + '</div>';
-  show(productInfoElement);
+    '<div class="productTitle">' + this.name + '</div>' +
+    '<div class="productDescription">' + this.text + '</div>';
+  show(productInfoElement);*/
 }
 
 function showMatchInfo(message) {

@@ -38,6 +38,9 @@ web_p-green {.web_color00 #448114}
 .web_clear{
    clear: both;
 }
+.web_hidden{
+    display: none;
+}
 
 
 /* -----end color-------*/
