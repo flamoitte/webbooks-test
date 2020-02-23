@@ -62,10 +62,12 @@ web_p-green {.web_color00 #448114}
 #matches{
     position: absolute;
     background-color: white;
+    width: 300px;
 }
 
 .web_match{
     display: block;
+    color: black
 }
 
 .web_main-container { 
