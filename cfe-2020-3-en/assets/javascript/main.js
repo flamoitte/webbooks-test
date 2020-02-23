@@ -113,7 +113,7 @@ function showMatches() {
 
 function addMatch(match) {
   const matchElement = document.createElement('div');
-  matchElement.classList.add('match');
+  matchElement.classList.add('web_match');
 
 /*try {
   documents.forEach(function(el) {
