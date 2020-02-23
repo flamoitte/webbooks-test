@@ -1,3 +1,5 @@
+var htmlPath = document.getElementById("currentpath").getAttribute("data-path");
+
 const backToResultsElement = document.getElementById('backToResults');
 backToResultsElement.onclick = backToResults;
 const itemNavigationElement = document.getElementById('itemNavigation');
@@ -18,7 +20,7 @@ var index;
 var matches;
 
 var request = new XMLHttpRequest();
-request.open("GET","data/index.json", false);
+request.open("GET",htmlPath + "data/index.json", false);
 request.send(null);
 var documents = JSON.parse(request.responseText);
 
