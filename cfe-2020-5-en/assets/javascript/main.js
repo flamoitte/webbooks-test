@@ -14,6 +14,13 @@ const matchesInfoElement = document.getElementById('matchesInfo');
 const queryInput = document.getElementById('query');
 
 const MATCHES_PER_PAGE = 10;
+const SEARCH_OPTIONS = {
+  fields: {
+    text: {boost: 1}
+  },
+  bool: 'OR',
+  expand: true // true: do not require whole-word matches only
+};
 
 var currentPage = 0;
 var index;
@@ -44,6 +51,7 @@ var documents = JSON.parse(request.responseText);
 var index = lunr(function () {
     this.ref('name')
     this.field('text')
+    this.metadataWhitelist = ['position']    
     
     console.log(documents);
     documents.forEach(function (doc) {
@@ -69,10 +77,9 @@ function doSearch() {
     }
     
     console.log(index.search(query));
-    console.log(documents.name);
     
     
-    matches = window.matches = index.search(query);
+    matches = window.matches = index.search(query, SEARCH_OPTIONS);
     if (matches.length === 0) {
         showMatchInfo('No matches :^\\');
         showItemNavigationInfo('');
@@ -95,7 +102,6 @@ function showMatches() {
   showItemNavigationInfo('Click on an item to view product details');
 
   for (let i = startIndex; i !== endIndex; ++i) {
-    console.log(matches[i].ref);
     addMatch(matches[i]);
   }
 
@@ -112,53 +118,23 @@ function showMatches() {
 }
 
 function addMatch(match) {
-  const matchElement = document.createElement('div');
-  matchElement.classList.add('web_match');
-
-/*try {
-  documents.forEach(function(el) {
-    console.log(documents[count].text);
-    if(this.name === match.ref) throw BreakException;
-    count = count + 1;
-  });
-} catch (e) {
-  if (e !== BreakException) throw e;
-}*/
-
-  var count = 0;
-  
+    const matchElement = document.createElement('div');
+    matchElement.classList.add('web_match');
+    
+    /* Get the index of match in document */
     var matchInd = documents.findIndex(function(item, i){
         return item.name === match.ref
     });
-/*    documents.forEach(function (doc) 
-    {
-        console.log(documents[count].name);
-        console.log(match.ref);
-
-        if(documents[count].name === match.ref){
-        console.log(documents[count].text);
-          matchElement.appendChild(document.createTextNode(documents[count].text.substring(0, 50)));
-        }
-        count = count + 1;
-    })*/
-
     
-  matchElement.appendChild(document.createTextNode(documents[matchInd].text.substring(0, 50)));
-  matchElement.onclick = showProductInfo.bind(match.ref);
-  matchesElement.appendChild(matchElement);
+    
+   /* console.log(match.matchData.metadata[1][text]);*//*[query.value]['text'].position*/
+    matchElement.appendChild(document.createTextNode(documents[matchInd].text.substring(0, 50)));
+    matchElement.onclick = showProductInfo.bind(match.ref);
+    matchesElement.appendChild(matchElement);
 }
 
 function showProductInfo() {
-  console.log('this', this);
   window.location.href = this;
-/*  hide(matchesElement);
-  hide(pageNavigationElement);
-  show(backToResultsElement);
-  // dummy content: could include images if online/cached — whatever
-  productInfoElement.innerHTML =
-    '<div class="productTitle">' + this.name + '</div>' +
-    '<div class="productDescription">' + this.text + '</div>';
-  show(productInfoElement);*/
 }
 
 function showMatchInfo(message) {
