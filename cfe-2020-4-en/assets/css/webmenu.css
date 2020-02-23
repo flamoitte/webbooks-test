@@ -67,7 +67,9 @@ web_p-green {.web_color00 #448114}
 
 .web_match{
     display: block;
-    color: black
+    color: black;
+    border-top: 1px solid gray;
+    padding: 0.2em;
 }
 
 .web_main-container { 
