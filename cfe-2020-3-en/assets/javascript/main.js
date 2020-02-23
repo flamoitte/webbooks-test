@@ -112,16 +112,32 @@ function showMatches() {
 function addMatch(match) {
   const matchElement = document.createElement('div');
   matchElement.classList.add('match');
-  
-  count = 0;
-    documents.forEach(function (doc) {
-        console.log(this.name);
-        if(this.name == match.ref){
-            return;
+
+/*try {
+  documents.forEach(function(el) {
+    console.log(documents[count].text);
+    if(this.name === match.ref) throw BreakException;
+    count = count + 1;
+  });
+} catch (e) {
+  if (e !== BreakException) throw e;
+}*/
+
+  var count = 0;
+    documents.forEach(function (doc) 
+    {
+        console.log(documents[count].name);
+        console.log(match.ref);
+
+        if(documents[count].name === match.ref){
+        console.log(documents[count].text);
+          matchElement.appendChild(document.createTextNode(documents[count].text));
         }
-    }, this)
+        count = count + 1;
+    })
+
     
-  matchElement.appendChild(document.createTextNode(documents[count].text));
+/*  matchElement.appendChild(document.createTextNode(documents[item].text));*/
   matchElement.onclick = showProductInfo.bind(match.ref);
   matchesElement.appendChild(matchElement);
 }
