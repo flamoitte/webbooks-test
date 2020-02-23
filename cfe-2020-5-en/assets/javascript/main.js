@@ -126,7 +126,11 @@ function addMatch(match) {
 }*/
 
   var count = 0;
-    documents.forEach(function (doc) 
+  
+    var matchInd = documents.findIndex(function(item, i){
+        return item.name === match.ref
+    });
+/*    documents.forEach(function (doc) 
     {
         console.log(documents[count].name);
         console.log(match.ref);
@@ -136,10 +140,10 @@ function addMatch(match) {
           matchElement.appendChild(document.createTextNode(documents[count].text.substring(0, 50)));
         }
         count = count + 1;
-    })
+    })*/
 
     
-/*  matchElement.appendChild(document.createTextNode(documents[item].text));*/
+  matchElement.appendChild(document.createTextNode(documents[matchInd].text.substring(0, 50)));
   matchElement.onclick = showProductInfo.bind(match.ref);
   matchesElement.appendChild(matchElement);
 }
