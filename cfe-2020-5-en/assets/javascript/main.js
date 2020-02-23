@@ -133,7 +133,7 @@ function addMatch(match) {
 
         if(documents[count].name === match.ref){
         console.log(documents[count].text);
-          matchElement.appendChild(document.createTextNode(documents[count].text));
+          matchElement.appendChild(document.createTextNode(documents[count].text.substring(0, 50)));
         }
         count = count + 1;
     })
