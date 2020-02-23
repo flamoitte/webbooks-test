@@ -146,6 +146,7 @@ function addMatch(match) {
 
 function showProductInfo() {
   console.log('this', this);
+  window.location.href = this;
 /*  hide(matchesElement);
   hide(pageNavigationElement);
   show(backToResultsElement);
