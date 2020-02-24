@@ -128,9 +128,12 @@ function addMatch(match) {
     });
     
     console.log(documents[matchInd].text);
+    console.log(match.matchData.metadata);
+    console.log(Object.keys(match.matchData.metadata)[0]);
     
-    var matchStart = match.matchData.metadata[query.value]['text'].position[0][0];
-    var matchLength = match.matchData.metadata[query.value]['text'].position[0][1];
+    var textMatch = Object.keys(match.matchData.metadata)[0];
+    var matchStart = match.matchData.metadata[textMatch]['text'].position[0][0];
+    var matchLength = match.matchData.metadata[textMatch]['text'].position[0][1];
     var textLenght = documents[matchInd].text.length;
     
     if(matchStart > Math.round(CHAR_DIPLAYED_SEARCH / 2) + 1){
