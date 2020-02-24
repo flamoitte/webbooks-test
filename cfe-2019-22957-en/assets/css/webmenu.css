@@ -61,11 +61,12 @@ web_p-green {.web_color00 #448114}
 
 #matches{
     font-family: 'Roboto', sans-serif;
-    font-size: 0.8em;
+    font-size: 0.75em;
+    line-height: 1.4;
     font-stretch: normal;
     position: absolute;
     background-color: white;
-    width: 300px;
+    width: 340px;
 }
 
 .web_match{
