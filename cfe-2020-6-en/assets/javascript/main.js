@@ -13,7 +13,8 @@ const productInfoElement = document.getElementById('productInfo');
 const matchesInfoElement = document.getElementById('matchesInfo');
 const queryInput = document.getElementById('query');
 
-const MATCHES_PER_PAGE = 10;
+const MATCHES_PER_PAGE = 15;
+const CHAR_DIPLAYED_SEARCH = 150;
 const SEARCH_OPTIONS = {
   fields: {
     text: {boost: 1}
@@ -126,9 +127,36 @@ function addMatch(match) {
         return item.name === match.ref
     });
     
+    console.log(documents[matchInd].text);
     
-   /* console.log(match.matchData.metadata[1][text]);*//*[query.value]['text'].position*/
-    matchElement.appendChild(document.createTextNode(documents[matchInd].text.substring(0, 50)));
+    var matchStart = match.matchData.metadata[query.value]['text'].position[0][0];
+    var matchLength = match.matchData.metadata[query.value]['text'].position[0][1];
+    var textLenght = documents[matchInd].text.length;
+    
+    if(matchStart > Math.round(CHAR_DIPLAYED_SEARCH / 2) + 1){
+        var textStart = matchStart - Math.round(CHAR_DIPLAYED_SEARCH / 2);
+        var textStartFullStop = '...';
+    }else{
+        var textStart = 0;
+        var textStartFullStop = '';
+    }
+    
+    if(textLenght > matchStart + matchLength + Math.round(CHAR_DIPLAYED_SEARCH / 2)){
+        var textEnd = matchStart + matchLength + Math.round(CHAR_DIPLAYED_SEARCH / 2);
+        var textEndFullStop = '...';
+    }else{
+        var textEnd = textLenght;
+        var textEndFullStop = '';
+    }
+    
+    var displayText = documents[matchInd].text.substring(textStart, textEnd);
+    
+    var displayTextStart = matchStart - textStart;
+    
+    var displayTextFormatted = displayText.substring(0,displayTextStart) + '<b>' + displayText.substring(displayTextStart,matchLength) + '</b>'; 
+
+    console.log(matchStart);
+    matchElement.appendChild(document.createTextNode(textStartFullStop + displayText + textEndFullStop));
     matchElement.onclick = showProductInfo.bind(match.ref);
     matchesElement.appendChild(matchElement);
 }
