@@ -689,9 +689,14 @@ a:hover#web_revised-version { color: #ec9a33; cursor:pointer;}
     border-top: 1px solid #ced4da;
     border-bottom: 1px solid #ced4da;
     border-right: 1px solid #ced4da;
+    border-left: 0;
     border-top-right-radius: 0.25rem;
     border-bottom-right-radius: 0.25rem;
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.web_form-control:focus{
+    outline: none;
 }
 
 .web_search-btn {
