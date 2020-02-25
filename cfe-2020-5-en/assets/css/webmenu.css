@@ -75,7 +75,10 @@ web_p-green {.web_color00 #448114}
     border-top: 1px solid gray;
     padding: 0.4em;
 }
-
+.web_match:hover{
+    background-color: #005E8A;
+    color: white;
+}
 .web_main-container { 
    font-family: 'Roboto', sans-serif;
    font-size: 16px;
