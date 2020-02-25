@@ -32,23 +32,6 @@ request.open("GET",htmlPath + "data/index.json", false);
 request.send(null);
 var documents = JSON.parse(request.responseText);
 
-/*   var request = new XMLHttpRequest();
-   request.open("GET", "data/index.json", false);
-   request.send(null)
-   var my_JSON_object = JSON.parse(request.responseText);
-   alert (my_JSON_object.name);*/
-   
-
-/*var documents =
-[
-{
-  "name": "https://flamoitte.github.io/webbooks-test/index.html",
-  "text": "Circular economy - waste and materials"
-}
-]
-;*/
-
-
 var index = lunr(function () {
     this.ref('name')
     this.field('text')
@@ -59,7 +42,6 @@ var index = lunr(function () {
         this.add(doc)
     }, this)
 });
-
 
 queryInput.oninput = doSearch;
 
