@@ -165,7 +165,7 @@ function addMatch(match) {
 }
 
 function showProductInfo() {
-  window.location.href = this;
+  window.location.href = htmlPath + this;
 }
 
 function showMatchInfo(message) {
