@@ -79,6 +79,12 @@ web_p-green {.web_color00 #448114}
     background-color: #005E8A;
     color: white;
 }
+
+.web_search-marker{
+    font-weight:bold;
+    background-color: yellow;
+}
+
 .web_main-container { 
    font-family: 'Roboto', sans-serif;
    font-size: 16px;
