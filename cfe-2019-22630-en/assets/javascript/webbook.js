@@ -151,88 +151,251 @@ $(document).ready(function() {
     displayBlockQuote();
     highlightToc();
 
+var htmlPath = document.getElementById("currentpath").getAttribute("data-path");
 
-/*    var index = elasticlunr(function () {
-        this.addField('title');
-        this.addField('body');
-        this.setRef('id');
-    });
+const backToResultsElement = document.getElementById('backToResults');
+backToResultsElement.onclick = backToResults;
+const itemNavigationElement = document.getElementById('itemNavigation');
+const matchesElement = document.getElementById('matches');
+const nextPageLink = document.getElementById('nextPage');
+nextPageLink.onclick = showNextPage;
+const pageNavigationElement = document.getElementById('pageNavigation');
+const previousPageLink = document.getElementById('previousPage');
+previousPageLink.onclick = showPreviousPage;
+const productInfoElement = document.getElementById('productInfo');
+const matchesInfoElement = document.getElementById('matchesInfo');
+const queryInput = document.getElementById('query');
+
+const MATCHES_PER_PAGE = 15;
+const CHAR_DIPLAYED_SEARCH = 150;
+const SEARCH_OPTIONS = {
+  fields: {
+    text: {boost: 1}
+  },
+  expand: true
+};
+
+var currentPage = 0;
+var index;
+var matches;
+
+var request = new XMLHttpRequest();
+request.open("GET",htmlPath + "images/data/index.json", false);
+request.send(null);
+var documents = JSON.parse(request.responseText);
+
+var index = lunr(function () {
+    this.ref('name')
+    this.field('text')
+    this.metadataWhitelist = ['position']    
     
-    var doc1 = {
-        "id": 1,
-        "title": "Oracle released its latest database Oracle 12g",
-        "body": "Yestaday Oracle has released its new database Oracle 12g, this would make more money for this company and lead to a nice profit report of annual year."
+    documents.forEach(function (doc) {
+        this.add(doc)
+    }, this)
+});
+
+queryInput.oninput = doSearch;
+
+function doSearch() {
+    matchesElement.textContent = '';
+    showMatchInfo('');
+    showItemNavigationInfo('');
+    hide(nextPageLink);
+    hide(previousPageLink);
+    
+    currentPage = 0;
+
+    const query = queryInput.value;
+    if (query.length < 2) {
+        return;
     }
     
-    var doc2 = {
-        "id": 2,
-        "title": "Oracle released its profit report of 2015",
-        "body": "As expected, Oracle released its profit report of 2015, during the good sales of database and hardware, Oracle's profit of 2015 reached 12.5 Billion."
+    startPerf();
+    matches = window.matches = index.search(query, SEARCH_OPTIONS);
+    endPerf();
+
+    if (matches.length === 0) {
+        showMatchInfo('No matches :^\\');
+        showItemNavigationInfo('');
+        return;
+    } else {
+        showMatches();
+    }
+};
+
+function showMatches() {
+  matchesElement.textContent = '';
+
+  // find index for first and last match to appear on the current page
+  var startIndex = currentPage * MATCHES_PER_PAGE;
+  var endIndex = Math.min((currentPage + 1) * MATCHES_PER_PAGE,
+    matches.length);
+
+  showMatchInfo('Showing ' + (startIndex + 1) + ' to ' + endIndex +
+    ' of ' + matches.length + ' matching item(s)');
+  showItemNavigationInfo('Click on an item to view product details');
+
+  for (let i = startIndex; i !== endIndex; ++i) {
+    addMatch(matches[i]);
+  }
+
+  if (matches.length > currentPage * MATCHES_PER_PAGE + MATCHES_PER_PAGE) {
+    show(nextPageLink);
+  } else {
+    hide(nextPageLink);
+  }
+  if (currentPage === 0) {
+    hide(previousPageLink);
+  } else {
+    show(previousPageLink);
+  }
+}
+
+function addMatch(match) {
+    const matchElement = document.createElement('div');
+    matchElement.classList.add('web_match');
+    
+    /* Get the index of match in document */
+    var matchInd = documents.findIndex(function(item, i){
+        return item.name === match.ref
+    });
+
+    var textMatch = Object.keys(match.matchData.metadata)[0];
+    var matchStart = match.matchData.metadata[textMatch]['text'].position[0][0];
+    var matchLength = match.matchData.metadata[textMatch]['text'].position[0][1];
+    var textLenght = documents[matchInd].text.length;
+    
+    if(matchStart > Math.round(CHAR_DIPLAYED_SEARCH / 2) + 1){
+        var textStart = matchStart - Math.round(CHAR_DIPLAYED_SEARCH / 2);
+        var textStartFullStop = '...';
+    }else{
+        var textStart = 0;
+        var textStartFullStop = '';
     }
     
-    index.addDoc(doc1);
-    index.addDoc(doc2);
+    if(textLenght > matchStart + matchLength + Math.round(CHAR_DIPLAYED_SEARCH / 2)){
+        var textEnd = matchStart + matchLength + Math.round(CHAR_DIPLAYED_SEARCH / 2);
+        var textEndFullStop = '...';
+    }else{
+        var textEnd = textLenght;
+        var textEndFullStop = '';
+    }
     
-    index.search("Oracle database");*/
+    var displayText = documents[matchInd].text.substring(textStart, textEnd);
+    
+    var displayTextStart = matchStart - textStart;
 
-  /*  Indexing the FAQ content */
-/*    var search = elasticlunr(function () {
-        this.addField('title');
-        this.addField('body');
-        this.setRef('id');
+    var MatchFormattedBefore = displayText.substring(0, displayTextStart);
+    var MatchFormatted = displayText.substring(displayTextStart, displayTextStart + matchLength);
+    var MatchFormattedAfter = displayText.substring(displayTextStart + matchLength);
+
+    var matchElementA = document.createElement("a");
+    matchElementA.setAttribute("class", "web_match-link");
+    matchElementA.setAttribute("href", htmlPath + match.ref);
+    
+    matchElementA.appendChild(document.createTextNode(textStartFullStop));
+    matchElementA.appendChild(document.createTextNode(MatchFormattedBefore));
+
+    var displayMatchElem = document.createElement("span");
+    displayMatchElem.setAttribute("class", "web_search-marker");
+    displayMatchElem.innerHTML = MatchFormatted;
+    
+    matchElementA.appendChild(displayMatchElem);
+    matchElementA.appendChild(document.createTextNode(MatchFormattedAfter));
+    matchElementA.appendChild(document.createTextNode(textEndFullStop));
+    matchElement.appendChild(matchElementA);
+    matchesElement.appendChild(matchElement);
+}
+
+	$("a.web_search-marker").click(function() {
+        var idToScroll = $(this).attr('href');
+        
+        navigationFn.goToSection(idToScroll);
     });
 
-    $(".faq-question").each(function (index, element) {
-        var $q = $(element);
-        var question = $q.find(".faq-headline").text();
-        var answer = $q.find(".faq-answer").text();
-        var $qid = $q.find(".qid").val();
-        
-        /\* init ElasticLunar *\/
-        var docid = {
-            id: $q.attr('id'),
-            title: question,
-            body: answer
+    function showMatchInfo(message) {
+      if (message === '') {
+        hide(matchesInfoElement);
+      } else {
+        show(matchesInfoElement);
+        matchesInfoElement.textContent = message;
+      }
+    }
+    
+    function showItemNavigationInfo(message) {
+      if (message === '') {
+        hide(itemNavigationElement);
+      } else {
+        show(itemNavigationElement);
+        itemNavigationElement.textContent = message;
+      }
+    }
+    
+    function backToResults() {
+      hide(backToResultsElement);
+      hide(productInfoElement);
+      show(pageNavigationElement);
+      show(matchesElement);
+      if (matches.length > currentPage * MATCHES_PER_PAGE + MATCHES_PER_PAGE) {
+        show(nextPageLink);
+      }
+    }
+    
+    function showNextPage() {
+      hide(nextPageLink);
+      hide(previousPageLink);
+      currentPage++;
+      showMatches();
+    }
+    
+    function showPreviousPage() {
+      hide(nextPageLink);
+      hide(previousPageLink);
+      currentPage--;
+      showMatches();
+    }
+    
+    // General utility functions
+    
+    function show(element) {
+      element.classList.remove('hidden');
+    }
+    
+    function hide(element) {
+      element.classList.add('hidden');
+    }
+    
+    // window.performance utilities
+    
+    function startPerf() {
+      window.performance.mark('start');
+    }
+    
+    function endPerf() {
+      window.performance.mark('end');
+    }
+    
+    function logPerf(message) {
+      window.performance.clearMeasures();
+      window.performance.measure('duration', 'start', 'end');
+      const duration =
+      performance.getEntriesByName('duration')[0].duration.toPrecision(4);
+    }
+    
+    
+        function setTocHeight(){
+            if ($(window).scrollTop() + $(window).height() > $(".web_end-article").offset().top) {
+                $(".web_btn-toc-content").innerHeight($(".web_end-article").offset().top - $(window).scrollTop() - (2 * $(".web_end-article").innerHeight()) + 9); 
+            }else if($(window).scrollTop() < $(".web_fullheader-ghost").offset().top){
+                $(".web_btn-toc-content").innerHeight(($(window).scrollTop() + $(window).height()) - $(".web_fullheader").offset().top - $(".web_fullheader").innerHeight()); 
+            }else{
+                $(".web_btn-toc-content").css('height','90vh');
+            }  
         };
-        search.addDoc(docid);
-    });
-
-    $( "#search-faq" ).keyup(function() {
-        var searchCtrl = $( "#search-input" ).val();
-        var searchResult = search.search(searchCtrl) || [];
-        
-        $('#search-results').empty(); /\* celar old results *\/
-        for (var i = 0; i < searchResult.length; i++) {
-            var qId = searchResult[i]['ref'];
-            var q = $('#' + qId + ' .question-content').text();
-            $('#search-results').append("" + q + " ");
-            /\* open the suggestion list *\/
-            $('#search-results').addClass('is-active'); 
+    
+        function ghostDesign(){
+            $('.web_article').css('paddingTop', $('.web_fullheader').height() + 50);
         };
-        
-        $('#search-results').slideDown();
-    });
-
-  $('#search-results').on('click', '.search-result', function() {
-    $('.faq-question').removeClass('is-active');
-    $('#search-results').slideUp();
-    $('.faq-question', $(this).attr("href")).addClass('is-active');
-  });*/
-
-
-    function setTocHeight(){
-        if ($(window).scrollTop() + $(window).height() > $(".web_end-article").offset().top) {
-            $(".web_btn-toc-content").innerHeight($(".web_end-article").offset().top - $(window).scrollTop() - (2 * $(".web_end-article").innerHeight()) + 9); 
-        }else if($(window).scrollTop() < $(".web_fullheader-ghost").offset().top){
-            $(".web_btn-toc-content").innerHeight(($(window).scrollTop() + $(window).height()) - $(".web_fullheader").offset().top - $(".web_fullheader").innerHeight()); 
-        }else{
-            $(".web_btn-toc-content").css('height','90vh');
-        }  
-    };
-
-    function ghostDesign(){
-        $('.web_article').css('paddingTop', $('.web_fullheader').height() + 50);
-    };
 
     function displayBlockQuote(){
         var windowScrollTop = $(window).scrollTop();
