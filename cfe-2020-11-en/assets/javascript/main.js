@@ -27,7 +27,7 @@ var index;
 var matches;
 
 var request = new XMLHttpRequest();
-request.open("GET",htmlPath + "data/index.json", false);
+request.open("GET",htmlPath + "images/data/index.json", false);
 request.send(null);
 var documents = JSON.parse(request.responseText);
 
