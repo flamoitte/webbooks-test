@@ -19,8 +19,7 @@ const SEARCH_OPTIONS = {
   fields: {
     text: {boost: 1}
   },
-  bool: 'OR',
-  expand: true // true: do not require whole-word matches only
+  expand: true
 };
 
 var currentPage = 0;
@@ -37,7 +36,6 @@ var index = lunr(function () {
     this.field('text')
     this.metadataWhitelist = ['position']    
     
-    console.log(documents);
     documents.forEach(function (doc) {
         this.add(doc)
     }, this)
@@ -59,10 +57,10 @@ function doSearch() {
         return;
     }
     
-    console.log(index.search(query));
-    
-    
+    startPerf();
     matches = window.matches = index.search(query, SEARCH_OPTIONS);
+    endPerf();
+
     if (matches.length === 0) {
         showMatchInfo('No matches :^\\');
         showItemNavigationInfo('');
@@ -108,11 +106,7 @@ function addMatch(match) {
     var matchInd = documents.findIndex(function(item, i){
         return item.name === match.ref
     });
-    
-    console.log(documents[matchInd].text);
-    console.log(match.matchData.metadata);
-    console.log(Object.keys(match.matchData.metadata)[0]);
-    
+
     var textMatch = Object.keys(match.matchData.metadata)[0];
     var matchStart = match.matchData.metadata[textMatch]['text'].position[0][0];
     var matchLength = match.matchData.metadata[textMatch]['text'].position[0][1];
@@ -137,11 +131,24 @@ function addMatch(match) {
     var displayText = documents[matchInd].text.substring(textStart, textEnd);
     
     var displayTextStart = matchStart - textStart;
-    
-    var displayTextFormatted = displayText.substring(0,displayTextStart) + '<b>' + displayText.substring(displayTextStart,matchLength) + '</b>'; 
 
-    console.log(matchStart);
-    matchElement.appendChild(document.createTextNode(textStartFullStop + displayText + textEndFullStop));
+    var MatchFormattedBefore = displayText.substring(0, displayTextStart);
+    var MatchFormatted = displayText.substring(displayTextStart, displayTextStart + matchLength);
+    var MatchFormattedAfter = displayText.substring(displayTextStart + matchLength);
+    
+    var displayTextFormatted = MatchFormattedBefore + '<b>' + MatchFormatted + '</b>' + MatchFormattedAfter;
+
+    matchElement.appendChild(document.createTextNode(textStartFullStop));
+    matchElement.appendChild(document.createTextNode(MatchFormattedBefore));
+
+    var displayMatchElem = document.createElement("span");
+    displayMatchElem.setAttribute("class", "web_search-marker");
+    displayMatchElem.innerHTML = MatchFormatted;
+    
+    matchElement.appendChild(displayMatchElem);
+    
+    matchElement.appendChild(document.createTextNode(MatchFormattedAfter));
+    matchElement.appendChild(document.createTextNode(textEndFullStop));
     matchElement.onclick = showProductInfo.bind(match.ref);
     matchesElement.appendChild(matchElement);
 }
