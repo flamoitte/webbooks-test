@@ -661,7 +661,9 @@ a:hover#web_revised-version { color: #ec9a33; cursor:pointer;}
     margin-top: 2em;
     position:absolute;
     right:2.5em;
-    width:350px;
+    width:335px;
+    margin-left:5px;
+    margin-bottom:5px;
 }
 
 .web_form-control {
@@ -721,11 +723,8 @@ a:hover#web_revised-version { color: #ec9a33; cursor:pointer;}
     font-stretch: normal;
     position: absolute;
     background-color: white;
-    width: 350px;
-    border-left: 1px solid #ced4da;
-    border-right: 1px solid #ced4da;
-    border-bottom: 1px solid #ced4da;
-    margin-left: -4px;
+    width: 335px;
+    margin-left: -5px;
     overflow:auto;
 }
 
