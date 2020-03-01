@@ -83,6 +83,7 @@ web_p-green {.web_color00 #448114}
 .web_search-marker{
     font-weight:bold;
     background-color: yellow;
+    color: black;
 }
 
 .web_main-container { 
