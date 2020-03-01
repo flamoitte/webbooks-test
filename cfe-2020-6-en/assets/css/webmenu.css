@@ -67,7 +67,7 @@ web_p-green {.web_color00 #448114}
    line-height: 1.52857143;
    color: #333;
    margin: 1em 0;
-   padding-left: 360px;
+   padding-left: 100px;
   }
 
 .web_genpdf{
@@ -722,7 +722,12 @@ a:hover#web_revised-version { color: #ec9a33; cursor:pointer;}
     position: absolute;
     background-color: white;
     width: 350px;
-    border: 1px solid #ced4da;
+    max-height:65vh;
+    border-left: 1px solid #ced4da;
+    border-right: 1px solid #ced4da;
+    border-bottom: 1px solid #ced4da;
+    margin-left: -4px;
+    overflow:auto;
 }
 
 .web_match{
