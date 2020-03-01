@@ -658,9 +658,6 @@ a:hover#web_revised-version { color: #ec9a33; cursor:pointer;}
 
 /* Search */
 .web_div-search{
-    margin-top: 2em;
-    position:absolute;
-    right:2.5em;
     width:335px;
     margin-left:5px;
     margin-bottom:5px;
