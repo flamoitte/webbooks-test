@@ -531,7 +531,7 @@ $(document).ready(function() {
         
     });
     
-	$("a.web_a").click(function() {
+/*	$("a.web_a").click(function() {
     	var idToScroll = $(this).attr('href');
     	
     	if(idToScroll.startsWith("#figure")){
@@ -569,7 +569,7 @@ $(document).ready(function() {
                 scrollTop: $(id).offset().top - headerHeight
             }, 1);
         }
-    }
+    }*/
 
 		// ==========Table button 
 	$('.web_btn-view').click(function() {
