@@ -1,11 +1,11 @@
 SocialShareKit.init({
     facebook: {
         url: window.location,
-        caption: '',
+        caption: document.title,
         picture: '',
     },
     twitter: {
-        text: '',
+        text: document.title,
         via: '@oecd',
     },
     onOpen: function(targetElement, network, networkUrl, popupWindow){
@@ -37,7 +37,7 @@ SocialShareKit.init({
 		});
    	  }
     },
-    title: '',
+    title: document.title,
     url: window.location,
 });
 
