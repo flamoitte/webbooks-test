@@ -9,7 +9,6 @@ $(document).ready(function() {
     if ($("#web_pubtitle")[0]){
         $(document).attr("title", $("#web_pubtitle").text() + " – " + $(".web_end-article-title").text());
     }
-
     setTocHeight();
     $('.web_offset').css('top', '-' + $(".web_fullheader").height() + 'px');
 
