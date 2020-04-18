@@ -3555,6 +3555,8 @@
 .oecd-footer {
   font-size: 14px;
   font-size: 0.875rem;
+  position: relative;
+  z-index: 1;
 }
 .oecd-footer a {
   text-decoration: none;

@@ -513,7 +513,11 @@ $(document).ready(function() {
         setTocHeight();
         
     });
-    
+
+    $("a.web_toc-current-a").click(function() {
+        closeTOC();
+    });	
+
 	// ==========Table button 
 	$('.web_btn-view').click(function() {
         $(this).find('i').toggleClass('fa-chevron-down fa-times').closest('.web_blk-expand').toggleClass('web_blk-expand-down');

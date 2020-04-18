@@ -22,7 +22,7 @@
     
     @media screen and (max-width: 1200px) {
     .web_main-container {padding-left: 0;}
-    .web_article {margin: 0 auto;}
+    .web_article {margin: 0 auto;font-size: 1em;}
     .web_btn-toc-content{width:400px;padding: 2em .3em 3em .5em;}
     .web_article{max-width:800px;}
     .web_end-article {padding-left: 0;}
@@ -58,7 +58,8 @@
     .web_countries {opacity:0; overflow:hidden; visibility: hidden; height:0;}
 	} 
   @media screen and (max-width: 767px){ 
-    .web_article{padding: 0 15px 0 30px}
+    .web_headline-link{margin-left: -26px;}
+    .web_article{padding: 0 2em 0 2em}
     .web_titleheader-title{font-size:1.7em;}
     .web_titleheader-title-fixed{font-size:15px;}
     .web_header-img{height:80px;background-size:65%;}
