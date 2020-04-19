@@ -492,6 +492,7 @@ $(document).ready(function() {
             $('.web_titleheader-serial-title').addClass('web_titleheader-serial-title-fixed');
             $('.web_titleheader-paper-title').addClass('web_titleheader-paper-title-fixed');
             $('#web_nav-page').addClass('web_nav-page-fixed');
+            $('.web_titleheader-filigrane').addClass('web_titleheader-filigrane-fixed');
             ghostDesign();
         } else {
             $('#web_nav-page').removeClass('web_nav-page-fixed');
@@ -504,6 +505,7 @@ $(document).ready(function() {
             $('.web_titleheader-title').removeClass('web_titleheader-title-fixed');
             $('.web_titleheader-serial-title').removeClass('web_titleheader-serial-title-fixed');
             $('.web_titleheader-paper-title').removeClass('web_titleheader-paper-title-fixed');
+            $('.web_titleheader-filigrane').removeClass('web_titleheader-filigrane-fixed');
             $('.web_article').css('paddingTop', '');
         }
 

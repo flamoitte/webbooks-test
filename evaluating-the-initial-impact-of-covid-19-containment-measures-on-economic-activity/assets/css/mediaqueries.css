@@ -148,8 +148,10 @@
   .web_main-container p {margin: .2em 0;}
   .web_main-container .web_biblio-container p {margin: .2em 0 0 1em;}
   .web_aside-illus {max-width:140px;vertical-align: middle;} 
-  .web_btn-toc-content {height:calc(99vh - 6.250rem);width: 100%}
+  .web_btn-toc-content {height:calc(99vh - 6.250rem);width: 100%;}
+  .web_btn-toc-content-mobile{position: fixed;z-index: 15;height: 100vh !important;}
   .web_btn-toc-title {width: calc(100% - 15px);}
+  .web_btn-toc-title-mobile{top: 0;position: fixed;z-index: 16;}
   .web_toc-title, .web_toc-chapter  {font-size:1em;}
   .web_btn-view {display:none}
   .web_box-container > .web_blk-expand.web_blk-expand-down {padding-left:0;}
