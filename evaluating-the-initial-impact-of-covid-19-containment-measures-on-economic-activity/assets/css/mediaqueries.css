@@ -9,7 +9,8 @@
     .web_main-container{padding-left:500px;}
     } 
   @media screen and (max-width: 1400px) {
-    .web_fullheader, .web_end-article-container{padding: 0 2em;}
+    .web_fullheader, .web_end-article-container {padding: 0 2em;}
+    #web_oecd-container .breadcrumb {padding: 0 3.5em;}
     .web_main-container{padding-left:400px;}
     .web_btn-toc-content{width:350px;}
     .web_article{max-width:750px;}
@@ -32,6 +33,7 @@
     } 
   @media screen and (max-width: 1024px) {
     .web_fullheader, .web_end-article-container{padding: 0;}
+    #web_oecd-container .breadcrumb {padding: 1em;}
     .web_toc-close{left:0.5em;}
     .web_oecd-logo-white{width:18%;}
     .web_oecd-logo-white-img{width: 100%;height: auto;}
@@ -58,9 +60,10 @@
     .web_countries {opacity:0; overflow:hidden; visibility: hidden; height:0;}
 	} 
   @media screen and (max-width: 767px){ 
+    #web_oecd-container .breadcrumb {display: none;}
     .web_headline-link{margin-left: -26px;}
     .web_article{padding: 0 2em 0 2em}
-    .web_titleheader-title{font-size:1.7em;}
+    .web_titleheader-title{font-size:2em;}
     .web_titleheader-title-fixed{font-size:15px;}
     .web_header-img{height:80px;background-size:65%;}
     .web_header-img-fixed{background-size: 50%;height: 50px;}
@@ -141,7 +144,8 @@
     .web_countries {opacity:0; overflow:hidden; visibility: hidden; height:0;}
 	}
   @media screen  and (min-width: 290px) and (max-width: 414px) {
-  .web_metadata-cover{width: 40%}
+   .web_toc-chapter > .web_toc-item-block{display:block;}
+   .web_metadata-cover{width: 40%}
   .web_toc-open{padding:0;}
   .web_btn-fullnav-top-cyc span {display: none;}
   .web_btn-empty {display:none}

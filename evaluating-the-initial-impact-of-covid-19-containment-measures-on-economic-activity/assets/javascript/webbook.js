@@ -9,11 +9,11 @@ $(document).ready(function() {
     if ($("#web_pubtitle")[0]){
         $(document).attr("title", $("#web_pubtitle").text() + " – " + $(".web_end-article-title").text());
     }
-    setTocHeight();
-    $('.web_offset').css('top', '-' + $(".web_fullheader").height() + 'px');
 
     $(window).load(function(){
         $(".web_oecd-covid").css("visibility", "visible");
+    setTocHeight();
+    $('.web_offset').css('top', '-' + $(".web_fullheader").height() + 'px');
     
         if(typeof $("#worldmap")[0] !== 'undefined'){
             var $svgDOM = $("#worldmap")[0].contentDocument.documentElement;
@@ -140,6 +140,7 @@ $(document).ready(function() {
 
     });
 
+
     $(".web_toc-current-a").closest($(".web_toc-item")).find($(".web_toc-subsection-content")).show();
     $(".web_toc-current-a").closest($(".web_toc-item")).find($(".web_plusminus")).html('&#xf077;');
 
@@ -233,6 +234,7 @@ $(document).ready(function() {
     });
     
     $(".web_disclaimer-open").click(function () {
+        closeTOC();
         $(".web_disclaimer-overlay").show();
     });
     
@@ -391,6 +393,17 @@ $(document).ready(function() {
     });
 
 //OTHERS
+    $(".web_back-to-top").click(function() {
+        
+        if($(".web_btn-toc-content").hasClass('web_toc-hidden')){
+        }else{
+            closeTOC();
+        }
+        
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+    });
+
 	$(window).on('resize', function(){
         /*ghostDesign();*/
         setTocHeight();
