@@ -1,12 +1,12 @@
 SocialShareKit.init({
     facebook: {
-        url: jQuery('.ssk-facebook').attr("href"),
-        caption: jQuery(document).find("#web_pubtitle").text(),
+        url: document.URL.replace(/#.*$/, ''),
+        caption: document.title,
         picture: '',
     },
     twitter: {
         text: '',
-        via: '',
+        via: '@oecd',
     },
     onOpen: function(targetElement, network, networkUrl, popupWindow){
       if (network === 'facebook') {
@@ -37,8 +37,8 @@ SocialShareKit.init({
 		});
    	  }
     },
-    title: jQuery(document).find("#web_pubtitle").text() + '',
-    url: jQuery('.ssk-twitter').attr("href"),
+    title: document.title,
+    url: document.URL.replace(/#.*$/, ""),
 });
 
 jQuery(document).ready(function () {
