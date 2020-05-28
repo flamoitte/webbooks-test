@@ -26,6 +26,24 @@ request2.send(null);
 var dataJson = JSON.parse(request2.responseText);
 
 
+// Observe if the page is translated by chrome and disable the search consequently    
+var observer = new MutationObserver(function (event) {
+    if(document.documentElement.className.match('translated')) {
+        queryInput.value = '';
+        emptySearch()
+        $(".web_search-ul").hide();
+    } else {
+        $(".web_search-ul").show();
+    }
+});
+
+observer.observe(document.documentElement, {
+  attributes: true,
+  attributeFilter: ['class'],
+  childList: false,
+  characterData: false
+});
+
 /*var theStemmer = function theStemmer(searchTerm) {
   return stemWord(searchTerm);
 }
@@ -46,9 +64,35 @@ var index = lunr(function () {
 var content = [];
 addTextNode(dataJson);
     
-queryInput.oninput = doSearch;
+$('#query').on('keydown', function(e) {
+    if (e.which == 13) {
+        e.preventDefault();
+        doSearch();
+    }
+});
+$('button.web_search-btn').on('click', function(e) {
+    doSearch();
+});
+
+queryInput.oninput = emptySearch;
+
+function emptySearch() {
+
+    if(queryInput.value == ''){
+        matchesElement.textContent = '';
+        
+        var parent = $('.web_search-marker').parent();
+        $('.web_search-marker').contents().unwrap();
+        parent.html(function(i, html) {
+           return html;
+        });
+        
+        $(".web_tableofcontents").show();
+    }
+}
 
 function doSearch() {
+
     matchesElement.textContent = '';
     
     currentPage = 0;
@@ -58,10 +102,14 @@ function doSearch() {
     matches = window.matches = index.search(query, SEARCH_OPTIONS);
     
     $('.web_search-marker').contents().unwrap();
-
+    
     if (matches.length === 0) {
+        $('html').toggleClass('notranslate');
+        $(".web_tableofcontents").show();
         return;
     } else {
+        $('html').toggleClass('notranslate');
+        $(".web_tableofcontents").hide();
         showMatches();
     }
 }
@@ -132,66 +180,61 @@ function displayMatchInContent(startCpt, maxCpt, result){
             
         totalMatch = totalMatch + posArray.length;
 
-        if(cpt < maxCpt){
-            var startString = 0;
+        var startString = 0;
+        
+        var htmlContent = '';
+        Object.keys(posArray).forEach(function (node) {
+            cpt = cpt + 1;
             
-            var htmlContent = '';
-            Object.keys(posArray).forEach(function (node) {
-                cpt = cpt + 1;
-                
-                //Build result
-                var matchStart = posArray[node][0];
-                var matchLength = posArray[node][1];
+            //Build result
+            var matchStart = posArray[node][0];
+            var matchLength = posArray[node][1];
+        
+            var textLenght = displayTextContent.length;
             
-                var textLenght = displayTextContent.length;
-                
-                if(matchStart > Math.round(CHAR_DIPLAYED_SEARCH / 2) + 1){
-                    var textStart = matchStart - Math.round(CHAR_DIPLAYED_SEARCH / 2);
-                    var textStartFullStop = '...';
-                }else{
-                    var textStart = 0;
-                    var textStartFullStop = '';
-                }
-                
-                if(textLenght > matchStart + matchLength + Math.round(CHAR_DIPLAYED_SEARCH / 2)){
-                    var textEnd = matchStart + matchLength + Math.round(CHAR_DIPLAYED_SEARCH / 2);
-                    var textEndFullStop = '...';
-                }else{
-                    var textEnd = textLenght;
-                    var textEndFullStop = '';
-                }
-                
-                var displayText = displayTextContent.substring(textStart, textEnd);
-                
-                var displayTextStart = matchStart - textStart;
+            if(matchStart > Math.round(CHAR_DIPLAYED_SEARCH / 2) + 1){
+                var textStart = matchStart - Math.round(CHAR_DIPLAYED_SEARCH / 2);
+                var textStartFullStop = '...';
+            }else{
+                var textStart = 0;
+                var textStartFullStop = '';
+            }
             
-                var MatchFormattedBefore = displayText.substring(0, displayTextStart);
-                var MatchFormatted = displayText.substring(displayTextStart, displayTextStart + matchLength);
-                var MatchFormattedAfter = displayText.substring(displayTextStart + matchLength);
-    
-                resultContent = resultContent + "<div class=\"web_match\" onclick=\"showProductInfo('" + textNodeId + "')\">" + textStartFullStop + MatchFormattedBefore + "<span class='web_search-marker'>" + MatchFormatted + "</span>" + MatchFormattedAfter + textEndFullStop + "</div>";
-                
-                
-                //Build match in content
-                var MatchFormattedBeforeContent = displayTextContent.substring(startString, matchStart);
-                var MatchFormattedContent = displayTextContent.substring(matchStart, matchStart + matchLength);
-                
-                htmlContent = htmlContent + MatchFormattedBeforeContent + "<span class='web_search-marker'>" + MatchFormattedContent + "</span>";
-                
-                startString = matchStart + matchLength;
-                
-            });
+            if(textLenght > matchStart + matchLength + Math.round(CHAR_DIPLAYED_SEARCH / 2)){
+                var textEnd = matchStart + matchLength + Math.round(CHAR_DIPLAYED_SEARCH / 2);
+                var textEndFullStop = '...';
+            }else{
+                var textEnd = textLenght;
+                var textEndFullStop = '';
+            }
             
-            var MatchFormattedAfterContent = displayTextContent.substring(startString);  
-            textMarked.innerHTML = htmlContent + MatchFormattedAfterContent;
-        }
+            var displayText = displayTextContent.substring(textStart, textEnd);
+            
+            var displayTextStart = matchStart - textStart;
+        
+            var MatchFormattedBefore = displayText.substring(0, displayTextStart);
+            var MatchFormatted = displayText.substring(displayTextStart, displayTextStart + matchLength);
+            var MatchFormattedAfter = displayText.substring(displayTextStart + matchLength);
 
+            resultContent = resultContent + "<div class=\"web_match\" onclick=\"showProductInfo('" + textNodeId + "')\">" + textStartFullStop + MatchFormattedBefore + "<span class='web_search-marker'>" + MatchFormatted + "</span>" + MatchFormattedAfter + textEndFullStop + "</div>";
+            
+            
+            //Build match in content
+            var MatchFormattedBeforeContent = displayTextContent.substring(startString, matchStart);
+            var MatchFormattedContent = displayTextContent.substring(matchStart, matchStart + matchLength);
+            
+            htmlContent = htmlContent + MatchFormattedBeforeContent + "<span class='web_search-marker'>" + MatchFormattedContent + "</span>";
+            
+            startString = matchStart + matchLength;
+            
+        });
+        
+        var MatchFormattedAfterContent = displayTextContent.substring(startString);  
+        textMarked.innerHTML = htmlContent + MatchFormattedAfterContent;
         
     });
     
-      if (cpt < totalMatch) {
-        resultContent = "<div class=\"web_count-match\" onclick=\"displayMatchInContent(" + "0" + "," + "100000" + ",false)\"><span class=\"web_counter-match\">" + cpt + '/' + totalMatch + " matches</span>" + '<span class="web_match-show-all">Show all</span>' + "</div>" + resultContent;
-      }
+    resultContent = "<div class=\"web_count-match\"><span class=\"web_counter-match\">" + totalMatch + " matches</span></div>" + resultContent;
     
     $('#matches').html(resultContent);
 
@@ -242,6 +285,10 @@ function showProductInfo(id) {
     var rid = id.lastIndexOf('#');
     var result = id.substring(rid);
     window.location.href = htmlPath + result;
+
+    $(".web_btn-toc-content").toggleClass('web_toc-hidden');
+    $(".web_btn-toc-title").toggleClass('web_toc-hidden');
+
     return false;
 }
 
